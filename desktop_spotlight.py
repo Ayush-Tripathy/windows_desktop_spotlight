@@ -20,7 +20,7 @@ SPI_SETDESKWALLPAPER = 20
 SLIDE_SHOW = 1
 STATIC = 2
 
-# Choose what to apply i.e. slideshow (1) or latest image (2)
+# Choose what to apply i.e. slideshow (1) or static image (2)
 choice = STATIC
 
 # Create data directory if not present
