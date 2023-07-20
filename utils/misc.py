@@ -2,6 +2,9 @@ import os
 import shutil
 import constants
 from PIL import Image as Img
+from utils import py_logger
+
+log = py_logger.get_logger(__name__, "debug")
 
 
 def add_to_startup(file_path, file_name="open_ds.bat", force=False):
@@ -69,7 +72,7 @@ def scan_wallpapers() -> list:
             possible_wallpapers.append(constants.SPOTLIGHT_ASSETS_PATH + f"\\{asset}")
 
     print(f"Possible wallpapers found: {len(possible_wallpapers)}")
-
+    log.info(f"Possible wallpapers found: {len(possible_wallpapers)}")
     return possible_wallpapers
 
 
@@ -101,5 +104,5 @@ def filter_wallpapers(wallpapers: list) -> list:
             continue
         filtered_wallpapers.append(wallpaper)
     print(f"Filtered wallpapers count: {len(filtered_wallpapers)}")
-
+    log.info(f"Filtered wallpapers count: {len(filtered_wallpapers)}")
     return filtered_wallpapers

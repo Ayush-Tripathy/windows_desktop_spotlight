@@ -1,6 +1,9 @@
 import win32security
 import winreg
 import getpass
+from utils import py_logger
+
+err_log = py_logger.get_logger(__name__, "error")
 
 
 def get_lockscreen_wallpaper() -> str:
@@ -18,5 +21,7 @@ def get_lockscreen_wallpaper() -> str:
             s_value = winreg.QueryValueEx(o_key, "landscapeImage")
         except EnvironmentError:
             print("ENV_ERR")
+            err_log.error("Env error")
+
             break
     return s_value[0]

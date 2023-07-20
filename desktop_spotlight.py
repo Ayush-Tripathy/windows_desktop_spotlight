@@ -4,11 +4,14 @@ import os
 import sys
 import constants
 import utils
+from utils import py_logger
+
+log = py_logger.get_logger(__name__, "debug")
 
 # Choose what to apply i.e. slideshow (1) or latest image (2)
 choice = constants.SYNC
 
-utils.verify_files(sys.argv)
+utils.misc.verify_files(sys.argv)
 
 SCRIPT_PATH = os.path.join(constants.SCRIPT_DIRECTORY, constants.SCRIPT_NAME)
 
@@ -19,6 +22,7 @@ else:
     utils.misc.add_to_startup(SCRIPT_PATH, "open_ds.bat", force=False)
 
 print("Current working directory:", os.getcwd())
+log.info(f"Current working directory: {os.getcwd()}")
 
 # Fetch all possible wallpapers
 possible_wallpapers = utils.misc.scan_wallpapers()
@@ -33,7 +37,7 @@ wallpapers = utils.save_wallpapers(possible_wallpapers)
 images = os.listdir(os.getcwd())
 
 # Filter wallpapers
-filtered_wallpapers = utils.filter_wallpapers(wallpapers)
+filtered_wallpapers = utils.misc.filter_wallpapers(wallpapers)
 
 if choice == constants.SLIDE_SHOW:
     utils.ld_wallpapers.start_slideshow(filtered_wallpapers)

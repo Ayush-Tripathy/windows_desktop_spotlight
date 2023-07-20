@@ -3,6 +3,9 @@ import constants
 import utils
 import sys
 import time
+from utils import py_logger
+
+log = py_logger.get_logger(__name__, "debug")
 
 
 def start_slideshow(filtered_wallpapers: list) -> (str, None):
@@ -14,6 +17,7 @@ def start_slideshow(filtered_wallpapers: list) -> (str, None):
 
         utils.desktop_utils.set_desktop_wallpaper(wallpaper_to_set)
         print(f"current wallpaper - {wallpaper_to_set}")
+        log.info(f"current wallpaper - {wallpaper_to_set}")
 
         # Exit if no more images left
         if idx == len(filtered_wallpapers) - 1:
@@ -60,7 +64,10 @@ def set_static(filtered_wallpapers: list) -> (str, None):
         store.write(cur_wallpaper_list_str)
         set_wallpaper = wallpaper_to_set.split("\\")[-1]
         store.write(set_wallpaper)
+
     print(f"current wallpaper - {wallpaper_to_set}")
+
+    log.info(f"current wallpaper - {wallpaper_to_set}")
     return wallpaper_to_set
 
 
@@ -75,4 +82,6 @@ def sync(filtered_wallpapers: list) -> (str, None):
 
     utils.desktop_utils.set_desktop_wallpaper(wallpaper_to_set)
     print(f"current wallpaper - {wallpaper_to_set}")
+
+    log.info(f"current wallpaper - {wallpaper_to_set}")
     return wallpaper_to_set
