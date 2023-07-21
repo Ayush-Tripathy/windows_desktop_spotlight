@@ -15,9 +15,9 @@ def add_to_startup(file_path, file_name="open_ds.bat", force=False):
     Creates a bat file to start the specified file at the
     windows startup path, the file is then called at everytime windows starts.
 
-    @:parameter file_path: path to the file to be added
-    @:parameter file_name: name of the .bat file to create
-    @:return None
+    :parameter file_path: path to the file to be added
+    :parameter file_name: name of the .bat file to create
+    :return None
     """
     if file_path == "":
         file_path = os.path.dirname(os.path.realpath(__file__))
@@ -29,37 +29,15 @@ def add_to_startup(file_path, file_name="open_ds.bat", force=False):
         bat_file.write(content)
 
 
-def verify_files(argv) -> bool:
-    # Create data directory if not present
-    if not os.path.isdir(constants.DATA_PATH):
-        os.mkdir(constants.DATA_PATH)
-
-    # Create store directory if not present
-    if not os.path.isdir(constants.STORE_PATH):
-        os.mkdir(constants.STORE_PATH)
-
-    # Create images directory if not present
-    if not os.path.isdir(constants.IMAGES_PATH):
-        os.mkdir(constants.IMAGES_PATH)
-
-    # Check if script path file exists in store directory
-    if not os.path.isfile(constants.SCRIPT_PATH_FILE):
-        with open(constants.SCRIPT_PATH_FILE, "w+") as sp_file:
-            sp_file.write(constants.CURRENT_DIRECTORY)
-            constants.SCRIPT_DIRECTORY = constants.CURRENT_DIRECTORY
-    else:
-        if "-r" in argv:
-            with open(constants.SCRIPT_PATH_FILE, "w+") as sp_file:
-                sp_file.write(constants.CURRENT_DIRECTORY)
-                constants.SCRIPT_DIRECTORY = constants.CURRENT_DIRECTORY
-        else:
-            with open(constants.SCRIPT_PATH_FILE, "r") as sp_file:
-                constants.SCRIPT_DIRECTORY = sp_file.readline()
-
-    return True
-
-
 def scan_wallpapers() -> list:
+    """
+    Function to scan for wallpapers in the windows spotlight assets folder.
+
+    It filters out the file that are above 400KB
+
+    :return list: list of possible wallpaper paths
+    """
+
     # Get all filenames present in spotlight assets path
     spotlight_assets = os.listdir(constants.SPOTLIGHT_ASSETS_PATH)
 
@@ -76,7 +54,14 @@ def scan_wallpapers() -> list:
     return possible_wallpapers
 
 
-def save_wallpapers(possible_wallpapers) -> list:
+def save_wallpapers(possible_wallpapers: list) -> list:
+    """
+    Function to save wallpapers to data/images directory .
+
+    :parameter possible_wallpapers: list of possible wallpapers to save from
+    :return list: list of saved wallpaper paths with extension
+    """
+
     wallpapers = []
     # Copy all possible wallpapers to 'images' directory and append each image
     # absolute path to 'wallpapers' list
@@ -94,6 +79,13 @@ def save_wallpapers(possible_wallpapers) -> list:
 
 
 def filter_wallpapers(wallpapers: list) -> list:
+    """
+    Function to filter wallpapers that matches the required dimension.
+
+    :parameter wallpapers: list of all wallpapers
+    :return list: list of filtered wallpaper paths
+    """
+
     # Filter wallpapers that have 1920*1080 dimension
     filtered_wallpapers = []
     for wallpaper in wallpapers:

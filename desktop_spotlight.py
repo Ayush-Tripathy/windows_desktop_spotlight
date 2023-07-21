@@ -2,16 +2,24 @@
 
 import os
 import sys
+import config
 import constants
-import utils
-from utils import py_logger
+
+config.flags_handler.handle_flags(sys.argv)
+
+if config.fs.verify_files(sys.argv):
+    import utils
+    from utils import py_logger
+else:
+    print("Some files are missing or corrupted")
+    print("Try to fix it using '-f' flag")
+    sys.exit(-1)
+# sys.excepthook = config.error_handler.error_handler_
 
 log = py_logger.get_logger(__name__, "debug")
 
 # Choose what to apply i.e. slideshow (1) or latest image (2)
 choice = constants.SYNC
-
-utils.misc.verify_files(sys.argv)
 
 SCRIPT_PATH = os.path.join(constants.SCRIPT_DIRECTORY, constants.SCRIPT_NAME)
 
@@ -39,9 +47,9 @@ images = os.listdir(os.getcwd())
 # Filter wallpapers
 filtered_wallpapers = utils.misc.filter_wallpapers(wallpapers)
 
-if choice == constants.SLIDE_SHOW:
+if constants.CHOICE == constants.SLIDE_SHOW:
     utils.ld_wallpapers.start_slideshow(filtered_wallpapers)
-elif choice == constants.STATIC:
+elif constants.CHOICE == constants.STATIC:
     utils.ld_wallpapers.set_static(filtered_wallpapers)
-elif choice == constants.SYNC:
+elif constants.CHOICE == constants.SYNC:
     utils.ld_wallpapers.sync(filtered_wallpapers)

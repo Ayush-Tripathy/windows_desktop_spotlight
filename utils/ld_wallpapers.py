@@ -9,6 +9,10 @@ log = py_logger.get_logger(__name__, "debug")
 
 
 def start_slideshow(filtered_wallpapers: list) -> (str, None):
+    """
+    Starts a slideshow of all wallpapers with 10s gap
+    """
+
     print("Starting a slideshow...")
     # Iterate through all images
     for idx, wallpaper in enumerate(filtered_wallpapers):
@@ -28,7 +32,12 @@ def start_slideshow(filtered_wallpapers: list) -> (str, None):
 
 
 def set_static(filtered_wallpapers: list) -> (str, None):
-    print("Setting latest found wallpaper...")
+    """
+    Selects a wallpaper from all wallpapers a set it as desktop wallpaper
+
+    Stores history of last set wallpaper and selects next one on the list
+    """
+    print("Setting a wallpaper...")
     wallpaper_idx = 0
     wallpaper_to_set = filtered_wallpapers[wallpaper_idx]
 
@@ -38,13 +47,15 @@ def set_static(filtered_wallpapers: list) -> (str, None):
         with open(constants.STORE_PATH + "\\history.txt", "r+") as store:
             w_list = []
             w_list_len = int(store.readline())
+
             for i in range(w_list_len):
                 w_list.append(store.readline().split("\n")[0])
+
             prev_wallpaper = store.readline()
             if prev_wallpaper in w_list:
                 wallpaper_idx = w_list.index(prev_wallpaper)
 
-                if wallpaper_idx < len(w_list) - 1:
+                if wallpaper_idx < len(w_list):
                     wallpaper_idx += 1
                 if wallpaper_idx == len(w_list) - 1:
                     print("At end of list")
@@ -71,11 +82,17 @@ def set_static(filtered_wallpapers: list) -> (str, None):
     return wallpaper_to_set
 
 
-def sync(filtered_wallpapers: list) -> (str, None):
-    current_lockscreen_wallpaper_name = utils.get_lockscreen_wallpaper().split("\\")[-1]
-    wallpaper_to_set = filtered_wallpapers[0]
+def sync(wallpapers: list) -> (str, None):
+    """
+    Set desktop wallpaper same as lockscreen wallpaper
 
-    for idx, fw in enumerate(filtered_wallpapers):
+    :parameter wallpapers: list of wallpapers
+    """
+
+    current_lockscreen_wallpaper_name = utils.get_lockscreen_wallpaper().split("\\")[-1]
+    wallpaper_to_set = wallpapers[0]
+
+    for idx, fw in enumerate(wallpapers):
         fw_n = fw.split("\\")[-1].rstrip(".jpg")
         if fw_n == current_lockscreen_wallpaper_name:
             wallpaper_to_set = fw

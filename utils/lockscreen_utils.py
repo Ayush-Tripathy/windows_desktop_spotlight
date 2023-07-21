@@ -7,6 +7,10 @@ err_log = py_logger.get_logger(__name__, "error")
 
 
 def get_lockscreen_wallpaper() -> str:
+    """
+    Returns the path of the current lockscreen wallpaper
+    """
+
     sid = win32security.LookupAccountName(None, getpass.getuser())[0]
     sid_str = win32security.ConvertSidToStringSid(sid)
 
