@@ -7,31 +7,9 @@ from utils import py_logger
 log = py_logger.get_logger(__name__, "debug")
 
 
-def add_to_startup(file_path, file_name="open_ds.bat", force=False):
-    """
-    Function to add a batch file to windows startup folder.
-    this batch file is used to run the script (desktop_spotlight.py)
-
-    Creates a bat file to start the specified file at the
-    windows startup path, the file is then called at everytime windows starts.
-
-    :parameter file_path: path to the file to be added
-    :parameter file_name: name of the .bat file to create
-    :return None
-    """
-    if file_path == "":
-        file_path = os.path.dirname(os.path.realpath(__file__))
-    bat_path = r'C:\Users\%s\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup' % constants.USER_NAME
-    if not force and os.path.isfile(bat_path + '\\' + file_name):
-        return None
-    with open(bat_path + '\\' + file_name, "w+") as bat_file:
-        content = f"python \"{file_path}\"\nexit"
-        bat_file.write(content)
-
-
 def scan_wallpapers() -> list:
     """
-    Function to scan for wallpapers in the windows spotlight assets folder.
+    Scans for wallpaper in the windows spotlight assets folder.
 
     It filters out the file that are above 400KB
 
@@ -56,7 +34,7 @@ def scan_wallpapers() -> list:
 
 def save_wallpapers(possible_wallpapers: list) -> list:
     """
-    Function to save wallpapers to data/images directory .
+    Saves all wallpapers to data/images directory .
 
     :parameter possible_wallpapers: list of possible wallpapers to save from
     :return list: list of saved wallpaper paths with extension
@@ -80,7 +58,7 @@ def save_wallpapers(possible_wallpapers: list) -> list:
 
 def filter_wallpapers(wallpapers: list) -> list:
     """
-    Function to filter wallpapers that matches the required dimension.
+    Filters out wallpaper that matches the required dimension.
 
     :parameter wallpapers: list of all wallpapers
     :return list: list of filtered wallpaper paths

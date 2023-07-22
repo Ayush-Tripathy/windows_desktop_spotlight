@@ -1,2 +1,5 @@
 __pycache__
 .idea
+dist
+build
+desktop_spotlight.spec

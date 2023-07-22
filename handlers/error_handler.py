@@ -2,14 +2,13 @@ import sys
 import traceback
 import utils.py_logger
 
-err_log = utils.py_logger.get_logger(__name__, "error")
-
 
 def error_handler(exc_type, exc_value, exc_traceback):
     """
     Handles any unhandled exceptions
     logs error into stderr.log file and also prints to stdout
     """
+    err_log = utils.py_logger.get_logger(__name__, "error")
 
     print("Unhandled exception\nFrom error handler: ")
     err_log.error(f"{exc_type.__name__}:"
@@ -19,4 +18,4 @@ def error_handler(exc_type, exc_value, exc_traceback):
 
 
 # Set error handler
-sys.excepthook = error_handler
+# sys.excepthook = error_handler

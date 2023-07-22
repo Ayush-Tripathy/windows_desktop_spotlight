@@ -67,7 +67,7 @@ def set_static(filtered_wallpapers: list) -> (str, None):
     utils.desktop_utils.set_desktop_wallpaper(wallpaper_to_set)
 
     # Update contents of history file in store directory
-    with open(constants.STORE_PATH + "\\history.txt", "w+") as store:
+    with open(constants.HISTORY_FILE, "w+") as store:
         cur_wallpaper_list_str = ""
         store.write(str(len(filtered_wallpapers)) + "\n")
         for fw in filtered_wallpapers:

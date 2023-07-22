@@ -4,17 +4,29 @@ import os
 import sys
 import config
 import constants
+import shutil
 
-config.flags_handler.handle_flags(sys.argv)
+if "-del" in sys.argv:
+    config.fs.rm_from_startup(constants.BAT_FILE_NAME)
+    if os.path.exists(constants.DATA_PATH):
+        shutil.rmtree(constants.DATA_PATH)
+        print("All Desktop Spotlight files are removed.")
+    else:
+        print("No Desktop Spotlight files found.")
+    sys.exit(0)
 
 if config.fs.verify_files(sys.argv):
+    import handlers
+    sys.excepthook = handlers.error_handler
+    handlers.flags_handler.handle_flags(sys.argv)
+
     import utils
     from utils import py_logger
 else:
     print("Some files are missing or corrupted")
-    print("Try to fix it using '-f' flag")
+    print("Try to fix it using '-r' flag")
     sys.exit(-1)
-# sys.excepthook = config.error_handler.error_handler_
+
 
 log = py_logger.get_logger(__name__, "debug")
 
@@ -24,10 +36,10 @@ choice = constants.SYNC
 SCRIPT_PATH = os.path.join(constants.SCRIPT_DIRECTORY, constants.SCRIPT_NAME)
 
 # Add a batch file to startup folder in windows
-if "-r" in sys.argv:
-    utils.misc.add_to_startup(SCRIPT_PATH, "open_ds.bat", force=True)
+if "-r" in sys.argv or constants.UPDATE_BATCH_FILE:
+    config.fs.add_to_startup(SCRIPT_PATH, constants.BAT_FILE_NAME, force=True)
 else:
-    utils.misc.add_to_startup(SCRIPT_PATH, "open_ds.bat", force=False)
+    config.fs.add_to_startup(SCRIPT_PATH, constants.BAT_FILE_NAME, force=False)
 
 print("Current working directory:", os.getcwd())
 log.info(f"Current working directory: {os.getcwd()}")
