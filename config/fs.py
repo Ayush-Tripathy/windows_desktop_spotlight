@@ -1,3 +1,5 @@
+import sys
+
 import constants
 import os
 
@@ -58,7 +60,7 @@ def verify_files(argv: list) -> bool:
     return True
 
 
-def add_to_startup(file_path, file_name="open_ds.bat", force=False):
+def add_to_startup(argv, file_path, file_name="open_ds.bat", force=False):
     """
     Adds a batch file to windows startup folder.
     this batch file is used to run the script (desktop_spotlight.py)
@@ -76,15 +78,23 @@ def add_to_startup(file_path, file_name="open_ds.bat", force=False):
     if not force and os.path.isfile(bat_path + '\\' + file_name):
         return None
     with open(bat_path + '\\' + file_name, "w+") as bat_file:
-        # content = f"python \"{file_path}\"\nexit"
+
         with open(constants.STARTUP_FILE, "r") as startup_file:
             choice = startup_file.readline()
             if choice in constants.CHOICES:
-                content = f"@echo off\n" \
-                          f"set \"flags=-{choice}\"\n" \
-                          f"start \"DesktopSpotlight\" \"{os.path.join(constants.SCRIPT_DIRECTORY, 'desktop_spotlight.exe')}\" %flags%"
+                if argv[0].split("/")[-1] == "desktop_spotlight.py":
+                    content = f"@echo off\n" \
+                              f"set \"flags=-{choice} {constants.flags.NOSAVE_FLAG}\"\n" \
+                              f"{sys.executable} \"{os.path.join(constants.SCRIPT_DIRECTORY, 'desktop_spotlight.py')}\" %flags%"
+                else:
+                    content = f"@echo off\n" \
+                            f"set \"flags=-{choice} {constants.flags.NOSAVE_FLAG}\"\n" \
+                            f"start \"DesktopSpotlight\" \"{os.path.join(constants.SCRIPT_DIRECTORY, 'desktop_spotlight.exe')}\" %flags%"
             else:
-                content = f"start \"DesktopSpotlight\" \"{os.path.join(constants.SCRIPT_DIRECTORY, 'desktop_spotlight.exe')}\""
+                if argv[0].split("/")[-1] == "desktop_spotlight.py":
+                    content = f"{sys.executable} \"{os.path.join(constants.SCRIPT_DIRECTORY, 'desktop_spotlight.py')}\""
+                else:
+                    content = f"start \"DesktopSpotlight\" \"{os.path.join(constants.SCRIPT_DIRECTORY, 'desktop_spotlight.exe')}\""
         bat_file.write(content)
 
 

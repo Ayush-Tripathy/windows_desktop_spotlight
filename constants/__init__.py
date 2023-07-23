@@ -1,5 +1,6 @@
 import getpass
 import os
+import constants.flags
 
 USER_NAME = getpass.getuser()
 CURRENT_DIRECTORY = os.getcwd()
@@ -23,4 +24,9 @@ CHOICES = {"sync": SYNC, "static": STATIC, "slideshow": SLIDE_SHOW}
 CHOICE = SYNC
 FLAGS = ["-r", "-f", "-clear", "-sync", "-slideshow", "-static"]
 BAT_FILE_NAME = "open_ds.bat"
-UPDATE_BATCH_FILE = False
+UPDATE_STARTUP_FILE = False
+START_BY_BATCH = 100
+START_BY_SCHEDULER = 101
+STARTUP_WAY = None
+UPDATE_SCHEDULER_TASK = False
+TASK_NAME = "DesktopSpotlightStart"

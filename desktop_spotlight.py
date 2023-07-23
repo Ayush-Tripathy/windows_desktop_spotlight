@@ -6,8 +6,10 @@ import config
 import constants
 import shutil
 
-if "-del" in sys.argv:
+
+if constants.flags.DEL_FLAG in sys.argv:
     config.fs.rm_from_startup(constants.BAT_FILE_NAME)
+    config.scheduler.delete_task(constants.TASK_NAME)
     if os.path.exists(constants.DATA_PATH):
         shutil.rmtree(constants.DATA_PATH)
         print("All Desktop Spotlight files are removed.")
@@ -30,16 +32,27 @@ else:
 
 log = py_logger.get_logger(__name__, "debug")
 
-# Choose what to apply i.e. slideshow (1) or latest image (2)
+# Choose what to apply i.e. slideshow (1) or static (2) or sync (3)
 choice = constants.SYNC
 
 SCRIPT_PATH = os.path.join(constants.SCRIPT_DIRECTORY, constants.SCRIPT_NAME)
 
-# Add a batch file to startup folder in windows
-if "-r" in sys.argv or constants.UPDATE_BATCH_FILE:
-    config.fs.add_to_startup(SCRIPT_PATH, constants.BAT_FILE_NAME, force=True)
-else:
-    config.fs.add_to_startup(SCRIPT_PATH, constants.BAT_FILE_NAME, force=False)
+if constants.STARTUP_WAY == constants.START_BY_BATCH:
+    config.scheduler.delete_task(constants.TASK_NAME)
+
+    # Add a batch file to startup folder in windows
+    config.fs.add_to_startup(sys.argv, SCRIPT_PATH, constants.BAT_FILE_NAME, force=True)
+
+elif constants.STARTUP_WAY == constants.START_BY_SCHEDULER:
+    config.fs.rm_from_startup(constants.BAT_FILE_NAME)
+
+    # Create a task in Task Scheduler
+    config.scheduler.create_task(sys.argv, SCRIPT_PATH, constants.TASK_NAME)
+
+    # if "-r" in sys.argv or constants.UPDATE_STARTUP_TASK:
+    #     config.scheduler.create_task(sys.argv, SCRIPT_PATH, constants.TASK_NAME)
+    # else:
+    #     config.scheduler.create_task(sys.argv, SCRIPT_PATH, constants.TASK_NAME)
 
 print("Current working directory:", os.getcwd())
 log.info(f"Current working directory: {os.getcwd()}")
