@@ -1,5 +1,4 @@
 import sys
-
 import constants
 import os
 
@@ -49,7 +48,7 @@ def verify_files(argv: list) -> bool:
             sp_file.write(constants.CURRENT_DIRECTORY)
             constants.SCRIPT_DIRECTORY = constants.CURRENT_DIRECTORY
     else:
-        if "-r" in argv:
+        if constants.flags.RESET_FLAG in argv:
             with open(constants.SCRIPT_PATH_FILE, "w+") as sp_file:
                 sp_file.write(constants.CURRENT_DIRECTORY)
                 constants.SCRIPT_DIRECTORY = constants.CURRENT_DIRECTORY

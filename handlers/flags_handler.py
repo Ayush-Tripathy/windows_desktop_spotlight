@@ -8,11 +8,14 @@ import constants
 import pyuac
 
 
-def handle_flags(argv: list):
+def handle_flags(argv: list, exclude=None):
+    if exclude is None:
+        exclude = []
+
     if "-f" in argv:
         pass
 
-    if constants.flags.CLEAR_FLAG in argv:
+    if constants.flags.CLEAR_FLAG in argv and constants.flags.CLEAR_FLAG not in exclude:
         config.fs.rm_from_startup(constants.BAT_FILE_NAME)
         config.scheduler.delete_task(constants.TASK_NAME)
 
@@ -20,20 +23,22 @@ def handle_flags(argv: list):
         print("Exit")
         sys.exit(1)
 
-    if constants.flags.RESET_FLAG in argv:
+    if constants.flags.RESET_FLAG in argv and constants.flags.RESET_FLAG not in exclude:
         reset(argv, verifyfiles=True)
 
-    if constants.flags.SAVE_TASK_FLAG in argv:
+    if constants.flags.SAVE_TASK_FLAG in argv and constants.flags.SAVE_TASK_FLAG not in exclude:
         if not pyuac.isUserAdmin():
             print("Admin rights required: please open with admin rights.")
             sys.exit(-2)
         constants.STARTUP_WAY = constants.START_BY_SCHEDULER
 
-    if constants.flags.SAVE_BAT_FLAG in argv:
+    if constants.flags.SAVE_BAT_FLAG in argv and constants.flags.SAVE_BAT_FLAG  not in exclude:
         constants.STARTUP_WAY = constants.START_BY_BATCH
 
-    if constants.flags.SYNC_FLAG in argv:
+    if constants.flags.SYNC_FLAG in argv and constants.flags.SYNC_FLAG not in exclude:
         constants.CHOICE = constants.SYNC
+        constants.TAKE_INPUT = False
+
         if constants.flags.NOSAVE_FLAG not in argv:
             with open(constants.PREFERENCE_FILE, "w+") as pref_file:
                 pref_file.write("sync")
@@ -41,8 +46,9 @@ def handle_flags(argv: list):
             with open(constants.STARTUP_FILE, "w+") as pref_file:
                 pref_file.write("sync")
 
-    elif constants.flags.STATIC_FLAG in argv:
+    elif constants.flags.STATIC_FLAG in argv and constants.flags.STATIC_FLAG not in exclude:
         constants.CHOICE = constants.STATIC
+        constants.TAKE_INPUT = False
 
         if constants.flags.NOSAVE_FLAG not in argv:
             with open(constants.PREFERENCE_FILE, "w+") as pref_file:
@@ -51,8 +57,9 @@ def handle_flags(argv: list):
             with open(constants.STARTUP_FILE, "w+") as pref_file:
                 pref_file.write("static")
 
-    elif constants.flags.SLIDESHOW_FLAG in argv:
+    elif constants.flags.SLIDESHOW_FLAG in argv and constants.flags.SLIDESHOW_FLAG not in exclude:
         constants.CHOICE = constants.SLIDE_SHOW
+        constants.TAKE_INPUT = False
 
         if constants.flags.NOSAVE_FLAG not in argv:
             with open(constants.PREFERENCE_FILE, "w+") as pref_file:
@@ -62,46 +69,11 @@ def handle_flags(argv: list):
                 pref_file.write("slideshow")
 
     else:
-        take_input = True
         with open(constants.PREFERENCE_FILE, "r") as pref_file:
             choice = pref_file.readline()
             if choice in constants.CHOICES.keys():
-                take_input = False
+                constants.TAKE_INPUT = False
                 constants.CHOICE = constants.CHOICES[choice]
-
-        if take_input:
-            prompt_text = "Enter wallpaper mode [ sync | static | slideshow ]: "
-            choice = input(prompt_text)
-
-            if choice not in constants.CHOICES.keys():
-                print("Invalid choice, terminating...")
-                sys.exit(-2)
-            constants.CHOICE = constants.CHOICES[choice]
-
-            approval = ["y", "yes"]
-            valid_approval_inputs = ["y", "n", "yes", "no"]
-
-            to_save = input("Save your choice? [y/n] : ")
-            to_save = to_save.lower()
-
-            if to_save in valid_approval_inputs:
-                if to_save in approval:
-                    with open(constants.PREFERENCE_FILE, "w+") as pref_file:
-                        pref_file.write(choice)
-
-            else:
-                print("Invalid input.")
-
-            to_update_startup_file = input("Use this preference at windows startup? [y/n] : ")
-            to_update_startup_file = to_update_startup_file.lower()
-
-            if to_update_startup_file in valid_approval_inputs:
-                if to_update_startup_file in approval:
-                    constants.UPDATE_STARTUP_FILE = True
-                    with open(constants.STARTUP_FILE, "w+") as pref_file:
-                        pref_file.write(choice)
-            else:
-                print("Invalid input.")
 
 
 def reset(argv: list, verifyfiles=False) -> None:
