@@ -148,3 +148,6 @@ elif constants.CHOICE == constants.STATIC:
     utils.ld_wallpapers.set_static(filtered_wallpapers)
 elif constants.CHOICE == constants.SYNC:
     utils.ld_wallpapers.sync(filtered_wallpapers)
+
+if constants.flags.NOSAVE_FLAG not in sys.argv:
+    input("Press enter to exit.\n")

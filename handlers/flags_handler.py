@@ -29,7 +29,10 @@ def handle_flags(argv: list, exclude=None):
     if constants.flags.SAVE_TASK_FLAG in argv and constants.flags.SAVE_TASK_FLAG not in exclude:
         if not pyuac.isUserAdmin():
             print("Admin rights required: please open with admin rights.")
-            sys.exit(-2)
+            if constants.flags.NOSAVE_FLAG not in sys.argv:
+                input("Press enter to exit.\n")
+                sys.exit(-2)
+
         constants.STARTUP_WAY = constants.START_BY_SCHEDULER
 
     if constants.flags.SAVE_BAT_FLAG in argv and constants.flags.SAVE_BAT_FLAG  not in exclude:

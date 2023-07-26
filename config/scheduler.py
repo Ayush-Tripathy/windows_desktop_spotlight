@@ -33,18 +33,20 @@ def create_task(argv, script_path, task_name, trigger_delay_minutes=0) -> None:
             action.Arguments = f'"{script_args}" "{constants.flags.NOSAVE_FLAG}"'
 
         # Create the logon trigger with delay
-        trigger = task_definition.Triggers.Create(9)  # 9 for LogonTrigger
-        trigger.ID = "LogonTriggerId"
-        trigger.UserId = ""  # Run the task for all users
+        trigger = task_definition.Triggers.Create(8)  # 8 for BootTrigger, 9 for LogonTrigger
+        trigger.ID = "BootTriggerId"
+        # trigger.UserId = "ayush"  # Run the task for all users
         trigger.Delay = f'PT{trigger_delay_minutes}M'
 
-        task_definition.RegistrationInfo.Description = 'Starts DesktopSpotlight with specified choice when user logs in.'
+        task_definition.RegistrationInfo.Description = 'Starts DesktopSpotlight with specified' \
+                                                       ' choice after windows startup.'
         task_definition.Settings.Enabled = True
         task_definition.Settings.DisallowStartIfOnBatteries = False
         task_definition.Settings.StopIfGoingOnBatteries = False
 
         # Register the task in the root folder
-        root_folder.RegisterTaskDefinition(task_name, task_definition, 6, "", "", 0)
+        create_or_update_task = 6
+        root_folder.RegisterTaskDefinition(task_name, task_definition, create_or_update_task, "", "", 0)
 
     except Exception as e:
         print(f"Failed to create the task: {e}")
