@@ -24,7 +24,7 @@ def scan_wallpapers() -> list:
     # Check for all possible wallpapers and add them to 'possible_wallpapers' list
     for asset in spotlight_assets:
         asset_size = os.path.getsize(constants.SPOTLIGHT_ASSETS_PATH + f"\\{asset}") / 1024
-        if asset_size > 400:
+        if asset_size > constants.MINIMUM_ASSET_SIZE:
             possible_wallpapers.append(constants.SPOTLIGHT_ASSETS_PATH + f"\\{asset}")
 
     print(f"Possible wallpapers found: {len(possible_wallpapers)}")

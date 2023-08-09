@@ -4,6 +4,7 @@ import constants.flags
 
 USER_NAME = getpass.getuser()
 CURRENT_DIRECTORY = os.getcwd()
+MINIMUM_ASSET_SIZE = 100  # in KiB
 DATA_PATH = r"C:\Users\%s\AppData\Local\DesktopSpotlight" % USER_NAME
 STORE_PATH = os.path.join(DATA_PATH, "store")
 SCRIPT_PATH_FILE = os.path.join(STORE_PATH, "script_path.txt")
