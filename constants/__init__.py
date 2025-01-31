@@ -5,12 +5,15 @@ import constants.flags
 USER_NAME = getpass.getuser()
 CURRENT_DIRECTORY = os.getcwd()
 MINIMUM_ASSET_SIZE = 100  # in KiB
-DATA_PATH = r"C:\Users\%s\AppData\Local\DesktopSpotlight" % USER_NAME
+DATA_PATH = f"C:\\Users\\{USER_NAME}\\AppData\\Local\\DesktopSpotlight"  # r"C:\Users\%s\AppData\Roaming\DesktopSpotlight" % USER_NAME
 STORE_PATH = os.path.join(DATA_PATH, "store")
 SCRIPT_PATH_FILE = os.path.join(STORE_PATH, "script_path.txt")
 SCRIPT_DIRECTORY = ""
 SCRIPT_NAME = "desktop_spotlight.py"
-SPOTLIGHT_ASSETS_PATH = r"C:\Users\%s\AppData\Local\Packages\Microsoft.Windows.ContentDeliveryManager_cw5n1h2txyewy\LocalState\Assets" % USER_NAME
+SPOTLIGHT_ASSETS_PATH = (
+    r"C:\Users\%s\AppData\Local\Packages\Microsoft.Windows.ContentDeliveryManager_cw5n1h2txyewy\LocalState\Assets"
+    % USER_NAME
+)
 IMAGES_PATH = os.path.join(DATA_PATH, "images")
 LOGS_DIRECTORY = os.path.join(STORE_PATH, "logs")
 PREFERENCE_FILE = os.path.join(STORE_PATH, "preference.txt")
@@ -32,3 +35,13 @@ STARTUP_WAY = None
 UPDATE_SCHEDULER_TASK = False
 TASK_NAME = "DesktopSpotlightStart"
 TAKE_INPUT = True
+
+# Scheduler constants
+TASK_NAME = "DesktopSpotlightStart"
+TASK_TRIGGER_DELAY_MINUTES = 0
+LOGON_TRIGGER = 9
+BOOT_TRIGGER = 8
+LOGON_TRIGGER_ID = "LogonTriggerId"
+BOOT_TRIGGER_ID = "BootTriggerId"
+TASK_DESCRIPTION = "Starts DesktopSpotlight with specified choice after a user logs in."
+ACTION_ID = "DesktopSpotlight"

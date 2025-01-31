@@ -22,31 +22,38 @@ def create_task(argv, script_path, task_name, trigger_delay_minutes=0) -> None:
 
         # Create the action to run the Python script
         action = task_definition.Actions.Create(0)
-        action.ID = "DesktopSpotlight"
+        action.ID = constants.ACTION_ID
 
         if argv[0].split("/")[-1] == "desktop_spotlight.py":
             action.Path = f'"{sys.executable}"'
-            action.Arguments = f'"{script_path}" "{script_args}" "-ns"'
+            action.Arguments = (
+                f'"{script_path}" "{script_args}" "{constants.flags.NOSAVE_FLAG}"'
+            )
         else:
-            script_path = os.path.join(constants.SCRIPT_DIRECTORY, "desktop_spotlight.exe")
+            script_path = os.path.join(
+                constants.SCRIPT_DIRECTORY, "desktop_spotlight.exe"
+            )
             action.Path = f'"{script_path}"'
             action.Arguments = f'"{script_args}" "{constants.flags.NOSAVE_FLAG}"'
 
         # Create the logon trigger with delay
-        trigger = task_definition.Triggers.Create(9)  # 8 for BootTrigger, 9 for LogonTrigger
-        trigger.ID = "LogonTriggerId"
+        trigger = task_definition.Triggers.Create(
+            constants.LOGON_TRIGGER
+        )  # 8 for BootTrigger, 9 for LogonTrigger
+        trigger.ID = constants.LOGON_TRIGGER_ID
         trigger.UserId = ""  # Run the task for all users
-        trigger.Delay = f'PT{trigger_delay_minutes}M'
+        trigger.Delay = f"PT{trigger_delay_minutes}M"
 
-        task_definition.RegistrationInfo.Description = 'Starts DesktopSpotlight with specified' \
-                                                       ' choice after a user logs in.'
+        task_definition.RegistrationInfo.Description = constants.TASK_DESCRIPTION
         task_definition.Settings.Enabled = True
         task_definition.Settings.DisallowStartIfOnBatteries = False
         task_definition.Settings.StopIfGoingOnBatteries = False
 
         # Register the task in the root folder
         create_or_update_task = 6
-        root_folder.RegisterTaskDefinition(task_name, task_definition, create_or_update_task, "", "", 0)
+        root_folder.RegisterTaskDefinition(
+            task_name, task_definition, create_or_update_task, "", "", 0
+        )
 
     except Exception as e:
         print(f"Failed to create the task: {e}")
